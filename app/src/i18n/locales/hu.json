@@ -206,6 +206,7 @@
   "misc.homegallery.title": "Kezdőlap és Galéria eltávolítása a Fájlkezelőből",
   "misc.taskbarleft.title": "Tálcaikonok balra igazítása",
   "misc.numlockstartup.title": "A Numlock letiltása indításkor",
+  "misc.utctime.title": "A hardveróra beállítása UTC-re",
   "misc.darkmode.title": "Sötét mód engedélyezése",
   "misc.filextensions.title": "Fájlkiterjesztések megjelenítése",
   "misc.hiddenfiles.title": "Rejtett fájlok megjelenítése",
@@ -270,5 +271,6 @@
   "supportdialog.exit": "Kilépés",
   "common.on": "Be",
   "common.off": "Ki",
-  "common.open": "Megnyitás"
+  "common.open": "Megnyitás",
+  "common.none": "Nincs (Kijelölés törlése)"
 }
