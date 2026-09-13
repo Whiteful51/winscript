@@ -256,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search" /v "AllowCortana" /t "REG_DWORD" /d "0" /f',
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer" /v "DisableSearchBoxSuggestions" /t "REG_DWORD" /d "1" /f',
       'reg add "HKLM\\Software\\Policies\\Microsoft\\Windows\\Explorer" /v "DisableSearchHistory" /t REG_DWORD /d "1" /f',
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v "Start_IrisRecommendations" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsDynamicSearchBoxEnabled" /t "REG_DWORD" /d "0" /f',
       'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsMSACloudSearchEnabled" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsAADCloudSearchEnabled" /t REG_DWORD /d "0" /f',
@@ -839,6 +840,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "Write-Host '-- Adding End Task to Right-Click' -ForegroundColor Green",
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings" /v "TaskbarEndTask" /t REG_DWORD /d "1" /f',
     ],
+    recentapps: [
+      "Write-Host '-- Hiding Recently Added Apps in Start Menu' -ForegroundColor Green",
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Start" /v "ShowRecentList" /t REG_DWORD /d "0" /f',
+    ],
     homegallery: [
       "Write-Host '-- Removing Home and Gallery from File Explorer' -ForegroundColor Green",
       'reg add "HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}" /v "System.IsPinnedToNameSpaceTree" /t REG_DWORD /d "0" /f',
@@ -1012,6 +1017,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "hiddenfiles",
     "classicmenu",
     "endtask",
+    "recentapps",
     "homegallery",
     "mpo",
     "utctime",
