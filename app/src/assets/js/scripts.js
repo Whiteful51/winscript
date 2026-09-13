@@ -1025,13 +1025,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   checkboxItems.forEach((id) => {
     const checkbox = document.getElementById(id);
-    if (checkbox) {
-      checkbox.addEventListener("change", () => {
-        checkbox.checked
-          ? scripts[id]?.forEach((script) => addScript(id, script))
-          : removeScripts(id);
-      });
-    }
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+      removeScripts(id);
+      if (checkbox.checked) {
+        scripts[id]?.forEach((script) => addScript(id, script));
+      }
+    });
   });
 
   const radios = document.querySelectorAll('input[type="radio"]');
@@ -1182,16 +1183,11 @@ const presets = {
     "msapps",
     "xbox",
     "consumerfeatures",
-    "recall",
     "microsoftstore",
     "msstoreupdates",
     "onedrive",
     "debloatedge",
-    "copilot",
-    "notepadrewrite",
-    "aiappxpackages",
-    "hideai",
-    "aifiles",
+    "group-windowsai",
     "taskbarwidgets",
     "locationaccess",
     "accinfoaccess",
@@ -1219,24 +1215,8 @@ const presets = {
     "screenrecording",
     "automap",
     "default0user",
-    "wtelemetry",
-    "wupdate",
-    "wsearchtelemetry",
-    "officetelemetry",
-    "appexperience",
-    "wfeedback",
-    "handwriting",
-    "windowsdrm",
-    "cloudbasedspeech",
-    "targetads",
-    "adobetelemetry",
-    "nvidiatelemetry",
-    "vscodetelemetry",
-    "mediatelemetry",
-    "powershelltelemetry",
-    "ccleanertelemetry",
-    "googleupdates",
-    "adobeupdates",
+    "group-windowstelemetry",
+    "group-3rdpartytelemetry",
     "deliveryoptimization",
     "gamebar",
     "ultimateperformance",

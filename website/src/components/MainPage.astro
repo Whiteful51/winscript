@@ -11,6 +11,7 @@ import ButtonEntry from "./ButtonEntry.astro";
 import Select from "./Select.astro";
 import Background from "./Background.astro";
 import Dialogs from "./Dialogs.astro";
+import GroupToggle from "./GroupToggle.astro";
 
 interface Props {
   t: Record<string, string>;
@@ -207,11 +208,12 @@ const languages = [
           />
         </Tab>
         <Tab tab="debloat">
-          <ScriptGroup
+          <GroupToggle
             title={t["debloat.features.title"]}
             description={t["debloat.features.desc"]}
             icon="/icons/debloat/features.png"
-            tools={[
+            id="windowsfeatures"
+            scripts={[
               {
                 title: t["debloat.features.consumer"],
                 inputId: "consumerfeatures",
@@ -231,11 +233,12 @@ const languages = [
             onText={t["common.on"]}
           />
 
-          <ScriptGroup
+          <GroupToggle
             title={t["debloat.ai.title"]}
             description={t["debloat.ai.desc"]}
             icon="/icons/debloat/copilot.png"
-            tools={[
+            id="windowsai"
+            scripts={[
               {
                 title: t["debloat.ai.hideai"],
                 inputId: "hideai",
@@ -704,11 +707,12 @@ const languages = [
           />
         </Tab>
         <Tab tab="privacy">
-          <ScriptGroup
+          <GroupToggle
             title={t["privacy.appaccess.title"]}
             description={t["privacy.appaccess.desc"]}
             icon="/icons/privacy/appaccess.png"
-            tools={[
+            id="appaccess"
+            scripts={[
               {
                 title: t["privacy.appaccess.location"],
                 inputId: "locationaccess",
@@ -874,11 +878,12 @@ const languages = [
           />
         </Tab>
         <Tab tab="telemetry">
-          <ScriptGroup
+          <GroupToggle
             title={t["telemetry.telemetry.title"]}
             description={t["telemetry.telemetry.desc"]}
             icon="/icons/telemetry/telemetry.png"
-            tools={[
+            id="windowstelemetry"
+            scripts={[
               { title: t["telemetry.windows"], inputId: "wtelemetry" },
               { title: t["telemetry.windowsupdate"], inputId: "wupdate" },
               {
@@ -912,11 +917,12 @@ const languages = [
             onText={t["common.on"]}
           />
 
-          <ScriptGroup
+          <GroupToggle
             title={t["telemetry.3rdparty.title"]}
             description={t["telemetry.3rdparty.desc"]}
             icon="/icons/telemetry/3rdparty.png"
-            tools={[
+            id="3rdpartytelemetry"
+            scripts={[
               { title: t["telemetry.adobetelemetry"], inputId: "adobetelemetry" },
               { title: t["telemetry.nvidiatelemetry"], inputId: "nvidiatelemetry" },
               {
@@ -1361,12 +1367,19 @@ const languages = [
           />
         </Tab>
         <Tab tab="install">
-          <input type="text" class="app-search" id="searchBar" placeholder={t["install.search"]} />
+          <input
+            autocomplete="off"
+            type="text"
+            class="app-search"
+            id="searchBar"
+            placeholder={t["install.search"]}
+          />
           <div class="manual-input">
             <input
               id="manualInput"
               class="app-search"
               type="text"
+              autocomplete="off"
               placeholder={t["install.manualInput"]}
             />
             <button id="addApp">{t["install.addApp"]}</button>
