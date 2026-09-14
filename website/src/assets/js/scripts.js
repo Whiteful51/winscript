@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ],
     thirdparty: [
       "Write-Host '-- Uninstalling third-party apps' -ForegroundColor Green",
-      `@("*DropboxOEM*","*RandomSaladGamesLLC*","*McAfee*","ShazamEntertainmentLtd.Shazam","ClearChannelRadioDigital.iHeartRadio","SpotifyAB.SpotifyMusic","*EclipseManager*","*ActiproSoftwareLLC*","*AdobeSystemsIncorporated.AdobePhotoshopExpress*","*Duolingo-LearnLanguagesforFree*","*PandoraMediaInc*","*CandyCrush*","*BubbleWitch3Saga*","*Wunderlist*","*Flipboard*","*Twitter*","*Facebook*","*Royal Revolt*","*Sway*","*Speed Test*","*Dolby*","*Viber*","*ACGMediaPlayer*","*Netflix*","*OneCalendar*","*LinkedInForWindows*","*HiddenCityMysteryofShadows*","*Hulu*","*HiddenCity*","*AdobePhotoshopExpress*") | ForEach-Object { $pkg = Get-AppxPackage $_; if ($pkg) { $pkg | Remove-AppxPackage; Write-Host "Removed: $_" } }`,
+      `@("*Minecraft*","*DropboxOEM*","*RandomSaladGamesLLC*","*McAfee*","ShazamEntertainmentLtd.Shazam","ClearChannelRadioDigital.iHeartRadio","SpotifyAB.SpotifyMusic","*EclipseManager*","*ActiproSoftwareLLC*","*AdobeSystemsIncorporated.AdobePhotoshopExpress*","*Duolingo-LearnLanguagesforFree*","*PandoraMediaInc*","*CandyCrush*","*BubbleWitch3Saga*","*Wunderlist*","*Flipboard*","*Twitter*","*Facebook*","*Royal Revolt*","*Sway*","*Speed Test*","*Dolby*","*Viber*","*ACGMediaPlayer*","*Netflix*","*OneCalendar*","*LinkedInForWindows*","*HiddenCityMysteryofShadows*","*Hulu*","*HiddenCity*","*AdobePhotoshopExpress*") | ForEach-Object { $pkg = Get-AppxPackage $_; if ($pkg) { $pkg | Remove-AppxPackage; Write-Host "Removed: $_" } }`,
     ],
     extensions: [
       "Write-Host '-- Uninstalling extensions' -ForegroundColor Green",
@@ -229,7 +229,6 @@ document.addEventListener("DOMContentLoaded", function () {
       'reg add "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\SystemSettings\\AccountNotifications" /v "EnableAccountNotifications" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SystemSettings\\AccountNotifications" /v "EnableAccountNotifications" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\Software\\Policies\\Microsoft\\Windows\\EdgeUI" /v "DisableMFUTracking" /t REG_DWORD /d "1" /f',
-      'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\EdgeUI" /v "DisableMFUTracking" /t REG_DWORD /d "1" /f',
       'reg add "HKCU\\Control Panel\\International\\User Profile" /v "HttpAcceptLanguageOptOut" /t REG_DWORD /d "1" /f',
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v "PublishUserActivities" /t REG_DWORD /d "0" /f',
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v "UploadUserActivities" /t REG_DWORD /d "0" /f',
@@ -257,6 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search" /v "AllowCortana" /t "REG_DWORD" /d "0" /f',
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer" /v "DisableSearchBoxSuggestions" /t "REG_DWORD" /d "1" /f',
       'reg add "HKLM\\Software\\Policies\\Microsoft\\Windows\\Explorer" /v "DisableSearchHistory" /t REG_DWORD /d "1" /f',
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v "Start_IrisRecommendations" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsDynamicSearchBoxEnabled" /t "REG_DWORD" /d "0" /f',
       'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsMSACloudSearchEnabled" /t REG_DWORD /d "0" /f',
       'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\SearchSettings" /v "IsAADCloudSearchEnabled" /t REG_DWORD /d "0" /f',
@@ -702,19 +702,46 @@ document.addEventListener("DOMContentLoaded", function () {
       "ipconfig /renew | Out-Null",
     ],
     balanced: [
-      "Write-Host '-- Set Balanced Power Plan' -ForegroundColor Green",
-      `$balanced = powercfg -list | Select-String -Pattern 'Balanced'; if ($balanced) { Write-Host '-- Power plan already exists.' } else { Write-Host '-- Enabling Balanced.'; $output = powercfg -duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e 2>&1; if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') { powercfg -RestoreDefaultSchemes } }`,
-      `$balancedGUID = (powercfg -list | Select-String -Pattern 'Balanced').Line.Split()[3]; Write-Host '-- Activating Balanced'; powercfg -setactive $balancedGUID`,
+      "Write-Host '-- Enabling Balanced Power Plan' -ForegroundColor Green",
+      `$balancedGUID = '381b4222-f694-41f0-9685-ff5bb260df2e'`,
+      `$allSchemes = powercfg -list`,
+      `if ($allSchemes -match $balancedGUID) {`,
+      `    Write-Host '-- Power plan already exists.'`,
+      `} else {`,
+      `    $output = powercfg -duplicatescheme $balancedGUID 2>&1`,
+      `    if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') {`,
+      `        powercfg -RestoreDefaultSchemes`,
+      `    }`,
+      `}`,
+      `powercfg -setactive $balancedGUID`,
     ],
     highperformance: [
-      "Write-Host '-- Set High Performance Power Plan' -ForegroundColor Green",
-      `$highPerformance = powercfg -list | Select-String -Pattern 'High performance'; if ($highPerformance) { Write-Host '-- Power plan already exists.' } else { Write-Host '-- Enabling High Performance.'; $output = powercfg -duplicatescheme 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c 2>&1; if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') { powercfg -RestoreDefaultSchemes } }`,
-      `$highPlanGUID = (powercfg -list | Select-String -Pattern 'High performance').Line.Split()[3]; Write-Host '-- Activating High Performance'; powercfg -setactive $highPlanGUID`,
+      "Write-Host '-- Enabling High Performance Power Plan' -ForegroundColor Green",
+      `$highPlanGUID = '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'`,
+      `$allSchemes = powercfg -list`,
+      `if ($allSchemes -match $highPlanGUID) {`,
+      `    Write-Host '-- Power plan already exists.'`,
+      `} else {`,
+      `    $output = powercfg -duplicatescheme $highPlanGUID 2>&1`,
+      `    if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') {`,
+      `        powercfg -RestoreDefaultSchemes`,
+      `    }`,
+      `}`,
+      `powercfg -setactive $highPlanGUID`,
     ],
     ultimateperformance: [
-      "Write-Host '-- Set Ultimate Performance Power Plan' -ForegroundColor Green",
-      `$ultimatePerformance = powercfg -list | Select-String -Pattern 'Ultimate Performance'; if ($ultimatePerformance) { Write-Host '-- Power plan already exists.' } else { Write-Host 'Enabling Ultimate Performance.'; $output = powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 2>&1; if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') { powercfg -RestoreDefaultSchemes } }`,
-      `$ultimatePlanGUID = (powercfg -list | Select-String -Pattern 'Ultimate Performance').Line.Split()[3]; Write-Host 'Activating Ultimate Performance'; powercfg -setactive $ultimatePlanGUID`,
+      "Write-Host '-- Enabling Ultimate Performance Power Plan' -ForegroundColor Green",
+      `$ultimateGUID = 'e9a42b02-d5df-448d-aa00-03f14749eb61'`,
+      `$allSchemes = powercfg -list`,
+      `if ($allSchemes -match $ultimateGUID) {`,
+      `    Write-Host '-- Power plan already exists.'`,
+      `} else {`,
+      `    $output = powercfg -duplicatescheme $ultimateGUID 2>&1`,
+      `    if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') {`,
+      `        powercfg -RestoreDefaultSchemes`,
+      `    }`,
+      `}`,
+      `powercfg -setactive $ultimateGUID`,
     ],
     transparency: [
       "Write-Host '-- Disabling Transparency' -ForegroundColor Green",
@@ -813,6 +840,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "Write-Host '-- Adding End Task to Right-Click' -ForegroundColor Green",
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings" /v "TaskbarEndTask" /t REG_DWORD /d "1" /f',
     ],
+    recentapps: [
+      "Write-Host '-- Hiding Recently Added Apps in Start Menu' -ForegroundColor Green",
+      'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Start" /v "ShowRecentList" /t REG_DWORD /d "0" /f',
+    ],
     homegallery: [
       "Write-Host '-- Removing Home and Gallery from File Explorer' -ForegroundColor Green",
       'reg add "HKCU\\Software\\Classes\\CLSID\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}" /v "System.IsPinnedToNameSpaceTree" /t REG_DWORD /d "0" /f',
@@ -827,17 +858,22 @@ document.addEventListener("DOMContentLoaded", function () {
       "Write-Host '-- Moving Taskbar Icons to the left' -ForegroundColor Green",
       'reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f',
     ],
+    utctime: [
+      "Write-Host '-- Setting Hardware Clock to UTC' -ForegroundColor Green",
+      'reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f',
+    ],
     stickykeys: [
       "Write-Host '-- Disabling Sticky Keys' -ForegroundColor Green",
       'reg add "HKCU\\Control Panel\\Accessibility\\StickyKeys" /v "Flags" /t REG_SZ /d "58" /f',
     ],
     taskbarwidgets: [
       "Write-Host '-- Disabling Taskbar Widgets' -ForegroundColor Green",
-      // TaskbarDa is blocked by Windows 11 24H2
-      // 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f',
       'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d 0 /f',
       'reg add "HKLM\\SOFTWARE\\Microsoft\\PolicyManager\\default\\NewsAndInterests\\AllowNewsAndInterests" /v "value" /t REG_DWORD /d 0 /f',
       'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Feeds" /v "EnableFeeds" /t REG_DWORD /d 0 /f',
+      'reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v "DisableCloudOptimizedContent" /t REG_DWORD /d 1 /f',
+      // TaskbarDa is blocked by Windows 11 24H2
+      // 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f',
     ],
     numlockstartup: [
       "Write-Host '-- Disabling Num Lock on Startup' -ForegroundColor Green",
@@ -981,8 +1017,10 @@ document.addEventListener("DOMContentLoaded", function () {
     "hiddenfiles",
     "classicmenu",
     "endtask",
+    "recentapps",
     "homegallery",
     "mpo",
+    "utctime",
     "taskbarleft",
     "stickykeys",
     "numlockstartup",
@@ -993,13 +1031,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   checkboxItems.forEach((id) => {
     const checkbox = document.getElementById(id);
-    if (checkbox) {
-      checkbox.addEventListener("change", () => {
-        checkbox.checked
-          ? scripts[id]?.forEach((script) => addScript(id, script))
-          : removeScripts(id);
-      });
-    }
+    if (!checkbox) return;
+
+    checkbox.addEventListener("change", () => {
+      removeScripts(id);
+      if (checkbox.checked) {
+        scripts[id]?.forEach((script) => addScript(id, script));
+      }
+    });
   });
 
   const radios = document.querySelectorAll('input[type="radio"]');
@@ -1083,7 +1122,6 @@ const presets = {
     "cleanmgr",
     "cleantemp",
     "sfc",
-    "thirdparty",
     "consumerfeatures",
     "recall",
     "msstoreupdates",
@@ -1151,16 +1189,11 @@ const presets = {
     "msapps",
     "xbox",
     "consumerfeatures",
-    "recall",
     "microsoftstore",
     "msstoreupdates",
     "onedrive",
     "debloatedge",
-    "copilot",
-    "notepadrewrite",
-    "aiappxpackages",
-    "hideai",
-    "aifiles",
+    "group-windowsai",
     "taskbarwidgets",
     "locationaccess",
     "accinfoaccess",
@@ -1188,24 +1221,8 @@ const presets = {
     "screenrecording",
     "automap",
     "default0user",
-    "wtelemetry",
-    "wupdate",
-    "wsearchtelemetry",
-    "officetelemetry",
-    "appexperience",
-    "wfeedback",
-    "handwriting",
-    "windowsdrm",
-    "cloudbasedspeech",
-    "targetads",
-    "adobetelemetry",
-    "nvidiatelemetry",
-    "vscodetelemetry",
-    "mediatelemetry",
-    "powershelltelemetry",
-    "ccleanertelemetry",
-    "googleupdates",
-    "adobeupdates",
+    "group-windowstelemetry",
+    "group-3rdpartytelemetry",
     "deliveryoptimization",
     "gamebar",
     "ultimateperformance",
